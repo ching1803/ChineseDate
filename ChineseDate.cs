@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -12,6 +12,27 @@ namespace ChineseDate
             string month = ConvertChiMonth(dateTime.Month.ToString());
             string day = ConvertChiDay(dateTime.Day.ToString());
             return year + "年" + month + "月" + day + "日";
+        }
+
+        public static string ConvertToChineseDate(DateTime dateTime, bool showDetails, bool showMinute, bool showSecond)
+        {
+            string baseStr = ConvertToChineseDate(dateTime);
+            if(!showDetails) { return baseStr; }
+
+            int hourIn24 = dateTime.Hour;
+            string amOrPm = (hourIn24 > 12) ? "下午" : "上午";
+            string hour = ConverChiHour((hourIn24-12).ToString());
+            baseStr += amOrPm + hour + "時";
+            if (!showMinute) { return baseStr; }
+
+            string minute = ConvertChiMinute(dateTime.Minute.ToString());
+            baseStr += minute + "分";
+            if (!showSecond) { return baseStr; }
+
+            string second = ConvertChiMinute(dateTime.Second.ToString());
+            baseStr += second + "秒";
+            return baseStr;
+
         }
 
 
@@ -60,8 +81,31 @@ namespace ChineseDate
 
         public static string ConvertChiMonth(string month)
         {
+            return ConvertOneToTwelveChiNumber(month);
+        }
+
+        public static string ConvertChiDay(string day)
+        {
+            return ConverSixtyChiNumber(day);
+        }
+
+        public static string ConverChiHour(string hour)
+        {
+            return ConvertOneToTwelveChiNumber(hour);
+        }
+        public static string ConvertChiMinute(string minute)
+        {
+            return ConverSixtyChiNumber(minute);
+        }
+        public static string ConvertChiSecond(string second)
+        {
+            return ConverSixtyChiNumber(second);
+        }
+
+        private static string ConvertOneToTwelveChiNumber(string number)
+        {
             StringBuilder result = new StringBuilder();
-            switch (month)
+            switch (number)
             {
                 case "1":
                     result.Append("一");
@@ -103,12 +147,12 @@ namespace ChineseDate
             return result.ToString();
         }
 
-        public static string ConvertChiDay(string day)
+        private static string ConverSixtyChiNumber(string number)
         {
             StringBuilder result = new StringBuilder();
-            if (day.Length == 2)
+            if (number.Length == 2)
             {
-                switch (day[0].ToString())
+                switch (number[0].ToString())
                 {
                     case "1":
                         result.Append("十");
@@ -116,12 +160,21 @@ namespace ChineseDate
                     case "2":
                         result.Append("二十");
                         break;
-                    default:
+                    case "3":
                         result.Append("三十");
+                        break;
+                    case "4":
+                        result.Append("四十");
+                        break;
+                    case "5":
+                        result.Append("五十");
+                        break;
+                    default:
+                        result.Append("六十");
                         break;
                 }
 
-                switch (day[1].ToString())
+                switch (number[1].ToString())
                 {
                     case "1":
                         result.Append("一");
@@ -158,7 +211,7 @@ namespace ChineseDate
             }
             else
             {
-                switch (day[0].ToString())
+                switch (number[0].ToString())
                 {
                     case "1":
                         result.Append("一");
@@ -193,5 +246,7 @@ namespace ChineseDate
                 return result.ToString();
             }
         }
+
+
     }
 }

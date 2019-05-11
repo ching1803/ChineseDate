@@ -20,8 +20,9 @@ namespace ChineseDate
             if(!showDetails) { return baseStr; }
 
             int hourIn24 = dateTime.Hour;
+            int hourIn12 = (hourIn24 > 12) ? hourIn24 - 12 : hourIn24;
             string amOrPm = (hourIn24 > 12) ? "下午" : "上午";
-            string hour = ConverChiHour((hourIn24-12).ToString());
+            string hour = ConverChiHour((hourIn12).ToString());
             baseStr += amOrPm + hour + "時";
             if (!showMinute) { return baseStr; }
 
